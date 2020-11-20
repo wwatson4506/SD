@@ -146,6 +146,15 @@ public:
 		return sdfs.begin(SdSpiConfig(csPin, SHARED_SPI, SD_SCK_MHZ(16)));
 		//return sdfs.begin(csPin, SD_SCK_MHZ(24));
 	}
+
+//----------------- Added For MSC ----------------
+#ifdef HAS_USB_MSC_CLASS
+	bool begin(msController *pDrive) {
+		return sdfs.begin((msController *)pDrive);
+    }  
+#endif  // HAS_USB_MSC_CLASS
+//------------------------------------------------
+
 	File open(const char *filepath, uint8_t mode = FILE_READ) {
 		oflag_t flags = O_READ;
 		if (mode == FILE_WRITE) flags = O_RDWR | O_CREAT | O_AT_END;
@@ -196,6 +205,13 @@ public:
 	bool init(uint8_t speed, uint8_t csPin) {
 		return SD.begin(csPin);
 	}
+//-------------- Added For MSC ------------------------------------------------
+#ifdef HAS_USB_MSC_CLASS
+	bool init(msController *pDrv) {
+		return SD.begin(pDrv);
+	}
+#endif // HAS_USB_MSC_CLASS
+//----------------------------------------------------------------------------
 	uint8_t type() {
 		return SD.sdfs.card()->type();
 	}
