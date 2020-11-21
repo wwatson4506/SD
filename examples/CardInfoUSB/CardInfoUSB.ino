@@ -40,8 +40,7 @@ void setup()
    while (!Serial) {
     ; // wait for serial port to connect.
   }
-  Serial.print("\nInitializing USB drive(s)...");
-  
+   
   // Start USBHost_t36, HUB(s) and USB devices.
   myusb.begin();
 
