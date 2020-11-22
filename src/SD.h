@@ -199,6 +199,11 @@ extern SDClass SD;
 #define SD_CARD_TYPE_SD1 0
 #define SD_CARD_TYPE_SD2 1
 #define SD_CARD_TYPE_SDHC 3
+//-------------- Added For MSC ------------------------------------------------
+#ifdef HAS_USB_MSC_CLASS
+#define SD_CARD_TYPE_USB 4
+#endif // HAS_USB_MSC_CLASS
+//----------------------------------------------------------------------------
 class Sd2Card
 {
 public:
@@ -209,6 +214,9 @@ public:
 #ifdef HAS_USB_MSC_CLASS
 	bool init(msController *pDrv) {
 		return SD.begin(pDrv);
+	}
+	uint8_t usbType() {
+		return SD.sdfs.usbDrive()->usbType();
 	}
 #endif // HAS_USB_MSC_CLASS
 //----------------------------------------------------------------------------
