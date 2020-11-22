@@ -53,7 +53,7 @@ void setup()
   } else {
      Serial.println("USB drive is present.");
   }
-#if 1
+  
   // print the type of card
   Serial.print("\nCard type: ");
   switch(card.usbType()) {
@@ -72,7 +72,7 @@ void setup()
     default:
       Serial.println("Unknown");
   }
-#endif
+
   // print the type and size of the first FAT-type volume
   uint32_t volumesize;
 if(volume.fatType()) {
