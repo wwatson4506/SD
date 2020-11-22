@@ -40,19 +40,42 @@ void setup()
    while (!Serial) {
     ; // wait for serial port to connect.
   }
-   
+  
   // Start USBHost_t36, HUB(s) and USB devices.
   myusb.begin();
 
   // we'll use the initialization code from the utility libraries
   // since we're just testing if the USB drive(s) are working!
-  Serial.println("\nInitializing USB MSC drive...");
+  Serial.print("\nInitializing USB MSC drive...");
   if (!card.init(&msDrive)) {
-    Serial.print("initialization failed!");
+    Serial.println("initialization failed. Things to check:");
+    Serial.println("* is a USB drive connected?");
+  } else {
+     Serial.println("USB drive is present.");
   }
-
+#if 1
+  // print the type of card
+  Serial.print("\nCard type: ");
+  switch(card.usbType()) {
+    case SD_CARD_TYPE_SD1:
+      Serial.println("SD1");
+      break;
+    case SD_CARD_TYPE_SD2:
+      Serial.println("SD2");
+      break;
+    case SD_CARD_TYPE_SDHC:
+      Serial.println("SDHC");
+      break;
+    case SD_CARD_TYPE_USB:
+      Serial.println("USB MSC");
+      break;
+    default:
+      Serial.println("Unknown");
+  }
+#endif
   // print the type and size of the first FAT-type volume
   uint32_t volumesize;
+if(volume.fatType()) {
   Serial.print("\nVolume type is FAT");
   Serial.println(volume.fatType(), DEC);
   Serial.println();
@@ -69,7 +92,8 @@ void setup()
   Serial.print("Volume size (Mbytes): ");
   volumesize /= 1024;
   Serial.println(volumesize);
- 
+}
+
   //Serial.println("\nFiles found on the card (name, date and size in bytes): ");
   //root.openRoot(volume);
   
