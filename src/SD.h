@@ -52,8 +52,15 @@
 
 class SDFile : public File
 {
-public:
+private:
+	// Classes derived from File are never meant to be constructed
+	// anywhere other than open() in the parent FS class and
+	// openNextFile() while traversing a directory.
+	// Only the abstract File class which references these derived
+	// classes is meant to have a public constructor!
 	SDFile(const SDFAT_FILE &file) : sdfatfile(file), filename(nullptr) { }
+	friend class SDClass;
+public:
 	virtual ~SDFile(void) {
 		if (sdfatfile) sdfatfile.close();
 		if (filename) free(filename);
@@ -158,6 +165,7 @@ public:
 	File open(const char *filepath, uint8_t mode = FILE_READ) {
 		oflag_t flags = O_READ;
 		if (mode == FILE_WRITE) flags = O_RDWR | O_CREAT | O_AT_END;
+		else if (mode == FILE_WRITE_BEGIN) flags = O_RDWR | O_CREAT;
 		SDFAT_FILE file = sdfs.open(filepath, flags);
 		if (file) return File(new SDFile(file));
 		return File();
